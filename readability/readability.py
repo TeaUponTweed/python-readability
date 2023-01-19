@@ -106,6 +106,7 @@ class Document:
         retry_length=250,
         xpath=False,
         handle_failures="discard",
+        cleaner = None,
     ):
         """Generate the document
 
@@ -118,6 +119,7 @@ class Document:
         containing xpath path pointing to original document path (allows to
         reconstruct selected summary in original document).
         :param handle_failures: Parameter passed to `lxml` for handling failure during exception.
+        :param cleaner: Instance of lxml.html.clean.Cleaner used to clean html. default set in cleaners.py
         Support options = ["discard", "ignore", None]
 
         Examples:
@@ -145,6 +147,10 @@ class Document:
         self.retry_length = retry_length
         self.xpath = xpath
         self.handle_failures = handle_failures
+        if cleaner is None:
+            self.html_cleaner = html_cleaner
+        else:
+            self.html_cleaner = cleaner
 
     def _html(self, force=False):
         if force or self.html is None:
@@ -162,7 +168,7 @@ class Document:
             self.encoding = 'utf-8'
         else:
             doc, self.encoding = build_doc(input)
-        doc = html_cleaner.clean_html(doc)
+        doc = self.html_cleaner.clean_html(doc)
         base_href = self.url
         if base_href:
             # trying to guard against bad links like <a href="http://[http://...">
