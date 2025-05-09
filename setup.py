@@ -49,7 +49,7 @@ def find_version(*file_paths):
 
 
 setup(
-    name="readability-lxml",
+    name="readability",
     version=find_version("readability", "__init__.py"),
     author="Yuri Baburov",
     author_email="burchik@gmail.com",
